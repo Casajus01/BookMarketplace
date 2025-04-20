@@ -1,0 +1,95 @@
+.landing-bg {
+    background-color: #A8D5BA; /* mint green */
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: 'Segoe UI', sans-serif;
+    padding: 60px 20px;
+  }
+  
+  .landing-container {
+    background-color: #F3DCCC; /* warm cream */
+    padding: 40px;
+    border-radius: 16px;
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.15);
+    max-width: 900px;
+    text-align: center;
+  }
+  
+  .landing-container h1 {
+    font-size: 36px;
+    color: #122A2C; /* deep inky teal */
+    margin-bottom: 10px;
+  }
+  
+  .tagline {
+    font-size: 18px;
+    color: #323232;
+    margin-bottom: 40px;
+  }
+  
+  .features {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    gap: 20px;
+    margin-bottom: 40px;
+  }
+  
+  .feature-card {
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 12px;
+    width: 240px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  .feature-card h3 {
+    color: #122A2C;
+    margin: 10px 0 5px;
+  }
+  
+  .feature-card p {
+    color: #595456;
+    font-size: 14px;
+    line-height: 1.4;
+  }
+  
+  .landing-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin-top: 30px;
+  }
+  
+  .primary-btn,
+  .secondary-btn {
+    padding: 12px 24px;
+    font-size: 16px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+  }
+  
+  .primary-btn {
+    background-color: #6A8E7C;
+    color: #fff;
+  }
+  
+  .primary-btn:hover {
+    background-color: #577564;
+  }
+  
+  .secondary-btn {
+    background-color: #ffffff;
+    color: #122A2C;
+    border: 2px solid #6A8E7C;
+  }
+  
+  .secondary-btn:hover {
+    background-color: #f0f0f0;
+  }
+  
