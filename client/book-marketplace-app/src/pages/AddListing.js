@@ -74,6 +74,7 @@ function AddListing() {
       });
 
       const data = await res.json();
+      console.log('Backend response:', data); // 👈 Add this
       if (res.ok) {
         alert('Listing created!');
         navigate('/browse');

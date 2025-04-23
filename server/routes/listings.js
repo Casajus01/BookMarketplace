@@ -1,15 +1,32 @@
 const express = require('express');
 
 module.exports = (db) => {
-  const router = express.Router();
+  const router = require('express').Router();
+
   router.get('/', (req, res) => {
-    const sql = `
-      SELECT listing_id, poster_id, date_posted, status, type
-      FROM listing
-      ORDER BY date_posted DESC
-    `;
+    const sql =  `
+    SELECT 
+      l.listing_id, 
+      l.poster_id, 
+      l.date_posted, 
+      l.status, 
+      l.type,
+      CAST(po.price AS DECIMAL(10,2)) AS price,
+      COALESCE(po.book_id, ti.book_id) AS book_id,
+      COALESCE(pb.title, tb.title) AS title,
+      COALESCE(pb.author, tb.author) AS author
+    FROM listing l
+    LEFT JOIN purchase_order po ON l.listing_id = po.listing_id
+    LEFT JOIN trade_item ti ON l.listing_id = ti.listing_id
+    LEFT JOIN book pb ON po.book_id = pb.book_id
+    LEFT JOIN book tb ON ti.book_id = tb.book_id
+    WHERE pb.book_id IS NOT NULL OR tb.book_id IS NOT NULL
+    ORDER BY l.date_posted DESC
+  `;
+
     db.query(sql, (err, rows) => {
       if (err) return res.status(500).json({ error: err.message });
+      console.log('Returned listings:', rows); // 👈 Add this
       res.json(rows);
     });
   });
