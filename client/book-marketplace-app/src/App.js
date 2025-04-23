@@ -4,7 +4,6 @@ import Signup from "./pages/Signup";
 import LandingPage from "./pages/LandingPage";
 import AddListing from "./pages/AddListing";
 import BrowseListings from "./pages/BrowseListings";
-import BookDetail from "./pages/BookDetail";
 import PurchaseConfirmation from "./pages/PurchaseConfirmation";
 import TradeProposal from "./pages/TradeProposal";
 import Wishlist from "./pages/Wishlist";
@@ -13,6 +12,7 @@ import UserDashboard from "./pages/UserDashboard";
 import VerifyListings from "./pages/VerifyListings";
 import WelcomeScreen from "./pages/WelcomeScreen";
 import NavBar from "./components/NavBar"; // ✅ import the NavBar
+import MyListings from "./pages/MyListings";
 
 function App() {
   const isAuthenticated = localStorage.getItem("token");
@@ -34,8 +34,9 @@ function App() {
 
         {/* Book listing features */}
         <Route path="/browse" element={<BrowseListings />} />
-        <Route path="/book/:id" element={<BookDetail />} />
         <Route path="/add-listing" element={<AddListing />} />
+        <Route path="/my-listings" element={<MyListings />} />
+
 
         {/* Buying & trading */}
         <Route path="/purchase-confirmation" element={<PurchaseConfirmation />} />

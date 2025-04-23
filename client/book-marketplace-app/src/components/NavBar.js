@@ -27,7 +27,7 @@ export default function NavBar() {
             <h3>My Account</h3>
             <ul>
               <li onClick={() => navigate('/profile')}>Profile</li>
-              <li onClick={() => navigate('/add-listing')}>My Listings</li>
+              <li onClick={() => navigate('/my-listings')}>My Listings</li>
               <li
                 onClick={() => {
                   localStorage.clear();
