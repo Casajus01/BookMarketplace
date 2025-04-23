@@ -69,6 +69,7 @@ module.exports = (db) => {
     });
   });
 
+
   // PATCH /purchase/:id
   router.patch('/purchase/:id', (req, res) => {
     const listingId = req.params.id;
@@ -86,7 +87,24 @@ module.exports = (db) => {
       res.json({ msg: 'Listing marked as sold' });
     });
   });
-  
+
+  // PATCH /listings/:id/status — update listing status (e.g. to 'sold')
+  router.patch('/:id/status', (req, res) => {
+    const { status } = req.body;
+    const allowedStatuses = ['pending', 'verified', 'sold'];
+
+    if (!allowedStatuses.includes(status)) {
+      return res.status(400).json({ msg: 'Invalid status' });
+    }
+
+    const sql = `UPDATE listing SET status = ? WHERE listing_id = ?`;
+    db.query(sql, [status, req.params.id], (err, result) => {
+      if (err) return res.status(500).json({ error: err.message });
+      res.json({ msg: 'Listing status updated' });
+    });
+  });
+
+
   // POST /listings
   router.post('/', (req, res) => {
     const { poster_id, type } = req.body;
