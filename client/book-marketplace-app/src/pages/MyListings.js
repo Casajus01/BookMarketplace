@@ -2,68 +2,97 @@ import React, { useEffect, useState } from 'react';
 import './MyListings.css';
 
 export default function MyListings() {
-  const [activeTab, setActiveTab] = useState('myListings');
-  const [listings, setListings] = useState([]);
   const userId = parseInt(localStorage.getItem('user_id'));
+  const [activeTab, setActiveTab] = useState('myListings');
+  const [myListings, setMyListings] = useState([]);
+  const [purchaseOrders, setPurchaseOrders] = useState([]);
+  const [booksSold, setBooksSold] = useState([]);
+  const [tradeRequests, setTradeRequests] = useState([]);
 
   useEffect(() => {
     fetch('http://localhost:5050/listings/all')
       .then(res => res.json())
-      .then(setListings)
-      .catch(console.error);
-  }, []);
+      .then(data => {
+        setMyListings(data.filter(item => item.poster_id === userId));
+        setTradeRequests(
+          data.filter(item => item.type === 'trade' && item.poster_id !== userId && item.owner_id === userId)
+        );
+      });
 
-  const myListings = listings.filter(l => l.poster_id === userId);
-  const purchaseOrders = listings.filter(l => l.buyer_id === userId);
-  const booksSold = listings.filter(l => l.seller_id === userId);
-  const tradeRequests = listings.filter(
-    l => l.type === 'trade' && l.poster_id !== userId && l.owner_id === userId
+    fetch(`http://localhost:5050/listings/purchase-orders/${userId}`)
+      .then(res => res.json())
+      .then(setPurchaseOrders)
+      .catch(console.error);
+
+    fetch(`http://localhost:5050/listings/books-sold/${userId}`)
+      .then(res => res.json())
+      .then(setBooksSold)
+      .catch(console.error);
+  }, [userId]);
+
+  const renderList = (items, labelFn) => (
+    <ul>
+      {items.length === 0 ? (
+        <li>No items to show.</li>
+      ) : (
+        items.map(item => (
+          <li key={item.listing_id}>
+            {labelFn(item)}
+          </li>
+        ))
+      )}
+    </ul>
   );
 
   const renderTab = () => {
-    let displayList = [];
-    let title = '';
-
     switch (activeTab) {
       case 'myListings':
-        title = 'My Listings';
-        displayList = myListings;
-        break;
+        return (
+          <div className="main-panel">
+            <h2>My Listings</h2>
+            {renderList(myListings, (item) => (
+              <>
+                📘 <strong>{item.title}</strong> by {item.author} — {item.type} <span>Status: {item.status}</span>
+              </>
+            ))}
+          </div>
+        );
       case 'tradeRequests':
-        title = 'Trade Requests';
-        displayList = tradeRequests;
-        break;
+        return (
+          <div className="main-panel">
+            <h2>Trade Requests</h2>
+            {renderList(tradeRequests, (item) => (
+              <>
+                🔁 <strong>{item.title}</strong> — From User #{item.poster_id}
+              </>
+            ))}
+          </div>
+        );
       case 'purchaseOrders':
-        title = 'Purchase Orders';
-        displayList = purchaseOrders;
-        break;
+        return (
+          <div className="main-panel">
+            <h2>Purchase Orders</h2>
+            {renderList(purchaseOrders, (item) => (
+              <>
+                💳 <strong>{item.title}</strong> by {item.author} — ${parseFloat(item.price).toFixed(2)}
+              </>
+            ))}
+          </div>
+        );
       case 'booksSold':
-        title = 'Books Sold';
-        displayList = booksSold;
-        break;
+        return (
+          <div className="main-panel">
+            <h2>Books Sold</h2>
+            {renderList(booksSold, (item) => (
+              <>
+                💰 <strong>{item.title}</strong> by {item.author} — Sold for ${parseFloat(item.price).toFixed(2)}
+              </>
+            ))}
+          </div>
+        );
       default:
-        break;
+        return null;
     }
-
-    return (
-      <div className="main-panel">
-        <h2>{title}</h2>
-        <ul>
-          {displayList.length === 0 ? (
-            <li>No items to show.</li>
-          ) : (
-            displayList.map((item) => (
-              <li key={item.listing_id}>
-                <span>
-                  📘 <strong>{item.title}</strong> by {item.author} — {item.type}
-                </span>
-                <span>Status: {item.status}</span>
-              </li>
-            ))
-          )}
-        </ul>
-      </div>
-    );
   };
 
   return (
