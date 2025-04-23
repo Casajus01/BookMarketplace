@@ -7,7 +7,7 @@ export default function VerifyListings() {
 
   const fetchListings = async () => {
     try {
-      const res = await fetch('http://localhost:5050/listings/all');
+      const res = await fetch('http://localhost:5000/listings/all');
       const data = await res.json();
       setListings(data.filter(listing => listing.status === 'pending'));
     } catch (err) {
@@ -23,7 +23,7 @@ export default function VerifyListings() {
 
   const handleVerify = async (id) => {
     try {
-      const res = await fetch(`http://localhost:5050/listings/${id}/verify`, {
+      const res = await fetch(`http://localhost:5000/listings/${id}/verify`, {
         method: 'PATCH',
       });
       if (res.ok) {

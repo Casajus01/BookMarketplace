@@ -10,7 +10,7 @@ export default function MyListings() {
   const [tradeRequests, setTradeRequests] = useState([]);
 
   useEffect(() => {
-    fetch('http://localhost:5050/listings/all')
+    fetch('http://localhost:5000/listings/all')
       .then(res => res.json())
       .then(data => {
         setMyListings(data.filter(item => item.poster_id === userId));

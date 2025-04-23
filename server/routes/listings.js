@@ -59,7 +59,12 @@ module.exports = (db) => {
     });
   });
 
+
   // PATCH /listings/purchase/:id — mark listing sold and set buyer_id
+
+
+  // PATCH /purchase/:id
+
   router.patch('/purchase/:id', (req, res) => {
     const listingId = req.params.id;
     const { buyer_id } = req.body;
@@ -76,6 +81,7 @@ module.exports = (db) => {
       res.json({ msg: 'Listing marked as sold' });
     });
   });
+
 
   // ✅ Get books purchased by a user
   router.get('/purchase-orders/:user_id', (req, res) => {
@@ -107,6 +113,25 @@ module.exports = (db) => {
       res.json(rows);
     });
   });
+
+
+  // PATCH /listings/:id/status — update listing status (e.g. to 'sold')
+  router.patch('/:id/status', (req, res) => {
+    const { status } = req.body;
+    const allowedStatuses = ['pending', 'verified', 'sold'];
+
+    if (!allowedStatuses.includes(status)) {
+      return res.status(400).json({ msg: 'Invalid status' });
+    }
+
+    const sql = `UPDATE listing SET status = ? WHERE listing_id = ?`;
+    db.query(sql, [status, req.params.id], (err, result) => {
+      if (err) return res.status(500).json({ error: err.message });
+      res.json({ msg: 'Listing status updated' });
+    });
+  });
+
+
 
   // POST /listings
   router.post('/', (req, res) => {

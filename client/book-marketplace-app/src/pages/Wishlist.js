@@ -13,7 +13,7 @@ export default function Wishlist() {
 
   // Fetch all books (for dropdown)
   const fetchBooks = () => {
-    fetch('http://localhost:5050/books')
+    fetch('http://localhost:5000/books')
       .then(res => res.json())
       .then(data => {
         const options = data.map(book => ({
@@ -26,11 +26,11 @@ export default function Wishlist() {
 
   // Fetch wishlist books
   const fetchWishlist = () => {
-    fetch(`http://localhost:5050/wishlist/${user_id}`)
+    fetch(`http://localhost:5000/wishlist/${user_id}`)
       .then(res => res.json())
       .then(bookIds => {
         // Now get full book info for each
-        fetch('http://localhost:5050/books')
+        fetch('http://localhost:5000/books')
           .then(res => res.json())
           .then(all => {
             const filtered = all.filter(b => bookIds.includes(b.book_id));
@@ -49,7 +49,7 @@ export default function Wishlist() {
     if (!selectedBook) return alert('Please select a book.');
 
     try {
-      const res = await fetch('http://localhost:5050/wishlist', {
+      const res = await fetch('http://localhost:5000/wishlist', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -74,7 +74,7 @@ export default function Wishlist() {
   // Add a brand new book
   const handleAddBook = async () => {
     try {
-      const res = await fetch('http://localhost:5050/books', {
+      const res = await fetch('http://localhost:5000/books', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ title, author })
