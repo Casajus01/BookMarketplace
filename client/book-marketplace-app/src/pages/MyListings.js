@@ -7,7 +7,7 @@ export default function MyListings() {
   const [userId] = useState(() => parseInt(localStorage.getItem('user_id')));
 
   useEffect(() => {
-    fetch('http://localhost:5050/listings/all')
+    fetch('http://localhost:5000/listings/all')
       .then(res => res.json())
       .then(data => {
         setListings(data);

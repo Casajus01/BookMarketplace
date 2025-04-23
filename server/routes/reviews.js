@@ -84,5 +84,25 @@ module.exports = (db) => {
     });
   });
 
+
+// 🔹 GET /reviews/written/:user_id — Fetch all reviews written by a specific user
+router.get('/written/:user_id', (req, res) => {
+  const sql = `
+    SELECT r.rating, r.comment, r.review_date, u.name AS reviewee_name
+    FROM user_review r
+    JOIN user u ON r.reviewee_id = u.user_id
+    WHERE r.reviewer_id = ?
+    ORDER BY r.review_date DESC
+  `;
+
+  db.query(sql, [req.params.user_id], (err, rows) => {
+    if (err) return res.status(500).json({ error: err.message });
+    res.json(rows);
+  });
+});
+
+
+
+
   return router;
 };
