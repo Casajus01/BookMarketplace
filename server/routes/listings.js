@@ -3,15 +3,11 @@ const express = require('express');
 module.exports = (db) => {
   const router = express.Router();
 
-  // GET /listings - only show verified listings
+  // GET /listings - show verified listings only
   router.get('/', (req, res) => {
     const sql = `
       SELECT 
-        l.listing_id, 
-        l.poster_id, 
-        l.date_posted, 
-        l.status, 
-        l.type,
+        l.listing_id, l.poster_id, l.date_posted, l.status, l.type,
         CAST(po.price AS DECIMAL(10,2)) AS price,
         COALESCE(po.book_id, ti.book_id) AS book_id,
         COALESCE(pb.title, tb.title) AS title,
@@ -25,22 +21,17 @@ module.exports = (db) => {
         AND l.status = 'verified'
       ORDER BY l.date_posted DESC
     `;
-
     db.query(sql, (err, rows) => {
       if (err) return res.status(500).json({ error: err.message });
       res.json(rows);
     });
   });
 
-  // GET /listings/all — admin view: shows everything
+  // Admin: view all listings
   router.get('/all', (req, res) => {
     const sql = `
       SELECT 
-        l.listing_id, 
-        l.poster_id, 
-        l.date_posted, 
-        l.status, 
-        l.type,
+        l.listing_id, l.poster_id, l.date_posted, l.status, l.type,
         CAST(po.price AS DECIMAL(10,2)) AS price,
         COALESCE(po.book_id, ti.book_id) AS book_id,
         COALESCE(pb.title, tb.title) AS title,
@@ -53,23 +44,22 @@ module.exports = (db) => {
       WHERE pb.book_id IS NOT NULL OR tb.book_id IS NOT NULL
       ORDER BY l.date_posted DESC
     `;
-
     db.query(sql, (err, rows) => {
       if (err) return res.status(500).json({ error: err.message });
       res.json(rows);
     });
   });
 
-  // PATCH /listings/:id/verify — admin approval
+  // PATCH /listings/:id/verify
   router.patch('/:id/verify', (req, res) => {
     const sql = `UPDATE listing SET status = 'verified' WHERE listing_id = ?`;
-    db.query(sql, [req.params.id], (err, result) => {
+    db.query(sql, [req.params.id], (err) => {
       if (err) return res.status(500).json({ error: err.message });
       res.json({ msg: 'Listing verified successfully' });
     });
   });
 
-  // PATCH /purchase/:id
+  // PATCH /listings/purchase/:id — mark listing sold and set buyer_id
   router.patch('/purchase/:id', (req, res) => {
     const listingId = req.params.id;
     const { buyer_id } = req.body;
@@ -86,7 +76,38 @@ module.exports = (db) => {
       res.json({ msg: 'Listing marked as sold' });
     });
   });
-  
+
+  // ✅ Get books purchased by a user
+  router.get('/purchase-orders/:user_id', (req, res) => {
+    const sql = `
+      SELECT po.listing_id, po.book_id, po.price, po.order_date, b.title, b.author
+      FROM purchase_order po
+      JOIN book b ON po.book_id = b.book_id
+      WHERE po.buyer_id = ?
+      ORDER BY po.order_date DESC
+    `;
+    db.query(sql, [req.params.user_id], (err, rows) => {
+      if (err) return res.status(500).json({ error: err.message });
+      res.json(rows);
+    });
+  });
+
+  // ✅ Get books sold by a user
+  router.get('/books-sold/:user_id', (req, res) => {
+    const sql = `
+      SELECT po.listing_id, po.book_id, po.price, po.order_date, b.title, b.author
+      FROM purchase_order po
+      JOIN book b ON po.book_id = b.book_id
+      JOIN listing l ON po.listing_id = l.listing_id
+      WHERE po.seller_id = ? AND l.status = 'sold'
+      ORDER BY po.order_date DESC
+    `;
+    db.query(sql, [req.params.user_id], (err, rows) => {
+      if (err) return res.status(500).json({ error: err.message });
+      res.json(rows);
+    });
+  });
+
   // POST /listings
   router.post('/', (req, res) => {
     const { poster_id, type } = req.body;

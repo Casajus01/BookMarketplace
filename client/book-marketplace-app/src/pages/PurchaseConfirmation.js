@@ -6,14 +6,15 @@ export default function PurchaseConfirmation() {
   const location = useLocation();
   const navigate = useNavigate();
   const { listing } = location.state || {};
+  const user_id = parseInt(localStorage.getItem('user_id'));
   const [statusUpdated, setStatusUpdated] = useState(false);
 
   useEffect(() => {
     if (listing && listing.listing_id) {
-      fetch(`http://localhost:5000/listings/${listing.listing_id}/status`, {
+      fetch(`http://localhost:5050/listings/purchase/${listing.listing_id}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ status: 'sold' })
+        body: JSON.stringify({ buyer_id: user_id })
       })
         .then(res => {
           if (res.ok) setStatusUpdated(true);
@@ -21,7 +22,7 @@ export default function PurchaseConfirmation() {
         })
         .catch(err => console.error(err));
     }
-  }, [listing]);
+  }, [listing, user_id]);
 
   if (!listing) {
     return (
