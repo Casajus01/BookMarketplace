@@ -23,6 +23,12 @@ db.connect((err) => {
 
 const authRoutes = require('./routes/auth')(db);
 app.use('/auth', authRoutes);
+const listingRoutes = require('./routes/listings')(db);
+app.use('/listings', listingRoutes);
+const bookRoutes = require('./routes/books')(db);
+app.use('/books', bookRoutes);
+
+
 
 app.get('/', (_, res) => res.send('ready'));
 app.listen(PORT, () => console.log(`listening`));
