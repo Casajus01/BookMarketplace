@@ -18,7 +18,7 @@ export default function Login() {
 
     setLoading(true);
     try {
-      const res = await fetch('http://localhost:5000/auth/login', {
+      const res = await fetch('http://localhost:5050/auth/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password }),
@@ -28,15 +28,21 @@ export default function Login() {
       if (res.ok) {
         alert('Logged in successfully!');
         localStorage.setItem('token', data.token);
+        localStorage.setItem('user_id', data.user_id);
 
-        // ✅ Decode name from token
+        // ✅ Decode JWT
         const decoded = jwtDecode(data.token);
         const name = decoded.name;
+        const role = decoded.role;
+        localStorage.setItem('role', role);
 
-        // ✅ Navigate with name
-        navigate('/welcome', { state: { name } });
+        // ✅ Conditional redirect
+        if (role === 'admin') {
+          navigate('/admin/verify');
+        } else {
+          navigate('/welcome', { state: { name } });
+        }
 
-        localStorage.setItem('user_id', data.user_id);
       } else {
         alert(data.msg || 'Login failed');
       }

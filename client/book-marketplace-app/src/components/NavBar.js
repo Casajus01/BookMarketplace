@@ -26,8 +26,8 @@ export default function NavBar() {
           <div className="sidebar" onClick={(e) => e.stopPropagation()}>
             <h3>My Account</h3>
             <ul>
-              <li onClick={() => navigate('/profile')}>Profile</li>
-              <li onClick={() => navigate('/add-listing')}>My Listings</li>
+              <li onClick={() => navigate('/add-listing')}>Add Listing</li>
+              <li onClick={() => navigate('/my-listings')}>My Listings</li>
               <li
                 onClick={() => {
                   localStorage.clear();
