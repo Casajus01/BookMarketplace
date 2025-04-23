@@ -1,0 +1,77 @@
+/* Shared aesthetic */
+.navbar {
+    background-color: #e7d4c8; /* same as sidebar */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 30px;
+    font-family: 'Segoe UI', sans-serif;
+    color: #122A2C; /* match sidebar text */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+  }
+  
+  .nav-left,
+  .nav-right {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+  }
+  
+  .nav-icon {
+    font-size: 28px;
+  }
+  
+  .nav-label {
+    margin-left: 8px;
+    font-size: 16px;
+  }
+  
+  .nav-title {
+    font-family: 'Caveat', cursive;
+    font-size: 28px;
+    color: #121d27; /* a visible but soft dark blue for contrast on #e7d4c8 */
+  }
+  
+  /* Sidebar Styles */
+  .sidebar-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.3);
+    display: flex;
+    justify-content: flex-end;
+    z-index: 10;
+  }
+  
+  .sidebar {
+    width: 250px;
+    background-color: #e7d4c8;
+    height: 100%;
+    padding: 20px;
+    box-shadow: -2px 0 6px rgba(0, 0, 0, 0.2);
+    font-family: 'Segoe UI', sans-serif;
+    color: #122A2C;
+  }
+  
+  .sidebar h3 {
+    font-weight: bold;
+    margin-bottom: 20px;
+  }
+  
+  .sidebar ul {
+    list-style: none;
+    padding: 0;
+  }
+  
+  .sidebar li {
+    padding: 10px 0;
+    cursor: pointer;
+    transition: color 0.2s;
+  }
+  
+  .sidebar li:hover {
+    color: #6A8E7C;
+  }
+  

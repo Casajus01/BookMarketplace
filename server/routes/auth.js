@@ -40,7 +40,7 @@ module.exports = (db) => {
       if (!match) return res.status(401).json({ msg: 'Bad creds' });
 
       const token = jwt.sign(
-        { user_id: user.user_id, role: user.role },
+        { user_id: user.user_id, name: user.name, role: user.role },
         JWT_SECRET,
         { expiresIn: '2h' }
       );

@@ -1,0 +1,47 @@
+.auth-bg {
+    background-color: #A8D5BA; /* minty fresh */
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Segoe UI', sans-serif;
+  }
+  
+  .auth-box {
+    background-color: #e7d4c8; /* soft paper card */
+    padding: 40px;
+    border-radius: 12px;
+    width: 480px;
+    text-align: center;
+    box-shadow: 0 4px 20px rgba(149, 148, 136, 0.2); /* soft shadow */
+  }
+  
+  .auth-box h2 {
+    color: #122A2C;
+    margin-bottom: 16px;
+    font-size: 26px;
+    font-weight: 600;
+  }
+  
+  .welcome-msg {
+    color: #122A2C;
+    font-size: 16px;
+    margin-bottom: 30px;
+  }
+  
+  .auth-box button {
+    padding: 12px 24px;
+    background-color: #6A8E7C;
+    border: none;
+    color: white;
+    font-weight: bold;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+  }
+  
+  .auth-box button:hover {
+    background-color: #577564;
+  }
+  
