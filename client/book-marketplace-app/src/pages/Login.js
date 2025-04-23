@@ -35,6 +35,8 @@ export default function Login() {
 
         // ✅ Navigate with name
         navigate('/welcome', { state: { name } });
+
+        localStorage.setItem('user_id', data.user_id);
       } else {
         alert(data.msg || 'Login failed');
       }
