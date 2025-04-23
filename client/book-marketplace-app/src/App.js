@@ -13,6 +13,7 @@ import VerifyListings from "./pages/VerifyListings";
 import WelcomeScreen from "./pages/WelcomeScreen";
 import NavBar from "./components/NavBar"; // ✅ import the NavBar
 import MyListings from "./pages/MyListings";
+import AdminListings from './pages/AdminListings';
 
 function App() {
   const isAuthenticated = localStorage.getItem("token");
@@ -32,6 +33,7 @@ function App() {
         <Route path="/signup" element={<Signup />} />
         <Route path="/welcome" element={<WelcomeScreen />} />
 
+
         {/* Book listing features */}
         <Route path="/browse" element={<BrowseListings />} />
         <Route path="/add-listing" element={<AddListing />} />
@@ -49,6 +51,7 @@ function App() {
 
         {/* Admin */}
         <Route path="/verify-listings" element={<VerifyListings />} />
+        <Route path="/admin/verify" element={<AdminListings />} />
       </Routes>
     </div>
   );

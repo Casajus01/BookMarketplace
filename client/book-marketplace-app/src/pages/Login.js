@@ -28,15 +28,21 @@ export default function Login() {
       if (res.ok) {
         alert('Logged in successfully!');
         localStorage.setItem('token', data.token);
+        localStorage.setItem('user_id', data.user_id);
 
-        // ✅ Decode name from token
+        // ✅ Decode JWT
         const decoded = jwtDecode(data.token);
         const name = decoded.name;
+        const role = decoded.role;
+        localStorage.setItem('role', role);
 
-        // ✅ Navigate with name
-        navigate('/welcome', { state: { name } });
+        // ✅ Conditional redirect
+        if (role === 'admin') {
+          navigate('/admin/verify');
+        } else {
+          navigate('/welcome', { state: { name } });
+        }
 
-        localStorage.setItem('user_id', data.user_id);
       } else {
         alert(data.msg || 'Login failed');
       }
