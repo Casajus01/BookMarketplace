@@ -9,12 +9,12 @@ export default function BrowseListings() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    fetch('http://localhost:5050/listings')
+    fetch('http://localhost:5000/listings')
       .then(res => res.json())
       .then(setListings)
       .catch(console.error);
 
-    fetch('http://localhost:5050/books')
+    fetch('http://localhost:5000/books')
       .then(res => res.json())
       .then(setBooks)
       .catch(console.error);
@@ -52,7 +52,13 @@ export default function BrowseListings() {
                 <p><strong>Author:</strong> {book.author || 'Unknown'}</p>
                 <p><strong>Type:</strong> {listing.type}</p>
                 <p><strong>Status:</strong> {listing.status}</p>
-                {!isTrade && <p><strong>Price:</strong> ${listing.price?.toFixed(2) || 'N/A'}</p>}
+                {!isTrade && <p>
+                <strong>Price:</strong>{' '}
+                {listing.type === 'purchase' && listing.price != null
+                  ? `$${parseFloat(listing.price).toFixed(2)}`
+                  : 'N/A'}
+              </p>
+              }
               </div>
               <button onClick={() => navigate(`/book/${listing.listing_id}`)}>
                 {label}
