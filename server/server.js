@@ -4,7 +4,7 @@ const mysql   = require('mysql2');
 const cors    = require('cors');
 
 const app  = express();
-const PORT = 5050;
+const PORT = 5000;
 
 app.use(cors());
 app.use(express.json());
@@ -30,6 +30,8 @@ const bookRoutes = require('./routes/books')(db);
 app.use('/books', bookRoutes);
 const wishlistRoutes = require('./routes/wishlist')(db);
 app.use('/wishlist', wishlistRoutes);
+const reviewRoutes = require('./routes/reviews')(db);
+app.use('/reviews', reviewRoutes);
 
 
 
