@@ -20,7 +20,7 @@ function AddListing() {
   const poster_id = parseInt(localStorage.getItem('user_id'));
 
   const fetchBooks = () => {
-    fetch('http://localhost:5000/books')
+    fetch('http://localhost:5050/books')
       .then(res => res.json())
       .then(data => {
         const options = data.map(book => ({
@@ -51,7 +51,7 @@ function AddListing() {
     }
 
     try {
-      const res = await fetch('http://localhost:5000/listings', {
+      const res = await fetch('http://localhost:5050/listings', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -89,7 +89,7 @@ function AddListing() {
 
   const handleAddBook = async () => {
     try {
-      const res = await fetch('http://localhost:5000/books', {
+      const res = await fetch('http://localhost:5050/books', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ title, author })
