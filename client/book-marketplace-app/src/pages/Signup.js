@@ -16,14 +16,6 @@ export default function Signup() {
             <label htmlFor="show-password">Show Password</label>
           </div>
 
-          <h4 className="section-title">Security Questions</h4>
-
-          <label>What city were you born in?</label>
-          <input type="text" placeholder="City" />
-
-          <label>Who is your favorite author?</label>
-          <input type="text" placeholder="Author" />
-
           <button type="submit">Create Account</button>
         </form>
 
