@@ -1,8 +1,16 @@
-// 📁 src/App.js
 import { Routes, Route, Navigate } from "react-router-dom";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
-import LandingPage from "./pages/LandingPage"; 
+import LandingPage from "./pages/LandingPage";
+import AddListing from "./pages/AddListing";
+import BrowseListings from "./pages/BrowseListings";
+import BookDetail from "./pages/BookDetail";
+import PurchaseConfirmation from "./pages/PurchaseConfirmation";
+import TradeProposal from "./pages/TradeProposal";
+import Wishlist from "./pages/Wishlist";
+import UserReviews from "./pages/UserReviews";
+import UserDashboard from "./pages/UserDashboard";
+import VerifyListings from "./pages/VerifyListings";
 
 function App() {
   const isAuthenticated = localStorage.getItem("token");
@@ -11,9 +19,26 @@ function App() {
     <div className="app-container">
       <Routes>
         <Route path="/" element={<Navigate to="/landing" />} />
+        <Route path="/landing" element={<LandingPage />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
-        <Route path="/landing" element={<LandingPage />} /> 
+
+        {/* Book listing features */}
+        <Route path="/browse" element={<BrowseListings />} />
+        <Route path="/book/:id" element={<BookDetail />} />
+        <Route path="/add-listing" element={<AddListing />} />
+
+        {/* Buying & trading */}
+        <Route path="/purchase-confirmation" element={<PurchaseConfirmation />} />
+        <Route path="/trade-proposal" element={<TradeProposal />} />
+
+        {/* User-specific features */}
+        <Route path="/wishlist" element={<Wishlist />} />
+        <Route path="/reviews" element={<UserReviews />} />
+        <Route path="/dashboard" element={<UserDashboard />} />
+
+        {/* Admin */}
+        <Route path="/verify-listings" element={<VerifyListings />} />
       </Routes>
     </div>
   );

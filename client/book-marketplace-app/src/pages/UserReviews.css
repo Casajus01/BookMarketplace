@@ -1,0 +1,32 @@
+.auth-bg {
+    background-color: #A8D5BA;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: 'Segoe UI', sans-serif;
+  }
+  
+  .auth-box {
+    background-color: #e7d4c8;
+    padding: 40px;
+    border-radius: 12px;
+    width: 450px;
+    box-shadow: 0 4px 20px rgba(149, 148, 136, 0.2);
+  }
+  
+  .auth-box h2 {
+    color: #122A2C;
+    font-size: 24px;
+    margin-bottom: 20px;
+  }
+  
+  .review-item {
+    text-align: left;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    font-size: 15px;
+    color: #333;
+  }
+  

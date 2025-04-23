@@ -1,0 +1,35 @@
+.auth-bg {
+    background-color: #A8D5BA;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: 'Segoe UI', sans-serif;
+  }
+  
+  .auth-box {
+    background-color: #e7d4c8;
+    padding: 40px;
+    border-radius: 12px;
+    width: 400px;
+    text-align: center;
+    box-shadow: 0 4px 20px rgba(149, 148, 136, 0.2);
+  }
+  
+  .auth-box h2 {
+    color: #122A2C;
+    font-size: 24px;
+    margin-bottom: 20px;
+  }
+  
+  .wishlist-list {
+    list-style: none;
+    padding: 0;
+    color: #333;
+  }
+  
+  .wishlist-list li {
+    margin: 10px 0;
+    font-size: 16px;
+  }
+  
