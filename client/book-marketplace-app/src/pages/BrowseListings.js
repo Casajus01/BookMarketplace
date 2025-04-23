@@ -5,8 +5,11 @@ import './BrowseListings.css';
 export default function BrowseListings() {
   const [listings, setListings] = useState([]);
   const [books, setBooks] = useState([]);
-  const [filter, setFilter] = useState('all'); // all | purchase | trade
+  const [wishlist, setWishlist] = useState([]);
+  const [filter, setFilter] = useState('all'); // all | purchase | trade | wishlist
+
   const navigate = useNavigate();
+  const user_id = parseInt(localStorage.getItem('user_id'));
 
   useEffect(() => {
     fetch('http://localhost:5000/listings')
@@ -18,14 +21,22 @@ export default function BrowseListings() {
       .then(res => res.json())
       .then(setBooks)
       .catch(console.error);
-  }, []);
+
+    fetch(`http://localhost:5000/wishlist/${user_id}`)
+      .then(res => res.json())
+      .then(setWishlist)
+      .catch(console.error);
+  }, [user_id]);
 
   const getBook = (book_id) => books.find(b => b.book_id === book_id) || {};
 
-  const filteredListings = listings.filter(listing => {
-    if (filter === 'all') return true;
-    return listing.type === filter;
-  });
+  const filteredListings = listings
+    .filter(listing => listing.poster_id !== user_id) // ❌ Don't show user's own listings
+    .filter(listing => {
+      if (filter === 'wishlist') return wishlist.includes(listing.book_id);
+      if (filter === 'all') return true;
+      return listing.type === filter;
+    });
 
   return (
     <div className="browse-page">
@@ -35,6 +46,7 @@ export default function BrowseListings() {
           <button className={filter === 'all' ? 'active' : ''} onClick={() => setFilter('all')}>All</button>
           <button className={filter === 'purchase' ? 'active' : ''} onClick={() => setFilter('purchase')}>Purchase</button>
           <button className={filter === 'trade' ? 'active' : ''} onClick={() => setFilter('trade')}>Trade</button>
+          <button className={filter === 'wishlist' ? 'active' : ''} onClick={() => setFilter('wishlist')}>Wishlist ❤️</button>
         </div>
       </div>
 
@@ -42,23 +54,27 @@ export default function BrowseListings() {
         {filteredListings.map(listing => {
           const book = getBook(listing.book_id);
           const isTrade = listing.type === 'trade';
+          const isFavorited = wishlist.includes(listing.book_id);
           const label = isTrade ? 'Request Trade' : 'Purchase Now';
 
           return (
             <div className="listing-card" key={listing.listing_id}>
-              <div className="placeholder-icon">📚</div>
+              <div className="placeholder-icon">
+                📚 {isFavorited && <span style={{ color: 'red' }}>❤️</span>}
+              </div>
               <h3>{book.title || 'Untitled Book'}</h3>
               <div className="listing-meta">
                 <p><strong>Author:</strong> {book.author || 'Unknown'}</p>
                 <p><strong>Type:</strong> {listing.type}</p>
                 <p><strong>Status:</strong> {listing.status}</p>
-                {!isTrade && <p>
-                <strong>Price:</strong>{' '}
-                {listing.type === 'purchase' && listing.price != null
-                  ? `$${parseFloat(listing.price).toFixed(2)}`
-                  : 'N/A'}
-              </p>
-              }
+                {!isTrade && (
+                  <p>
+                    <strong>Price:</strong>{' '}
+                    {listing.price != null
+                      ? `$${parseFloat(listing.price).toFixed(2)}`
+                      : 'N/A'}
+                  </p>
+                )}
               </div>
               <button onClick={() => navigate(`/book/${listing.listing_id}`)}>
                 {label}
@@ -66,6 +82,10 @@ export default function BrowseListings() {
             </div>
           );
         })}
+
+        {filteredListings.length === 0 && (
+          <p style={{ textAlign: 'center', marginTop: '2rem' }}>No listings found.</p>
+        )}
       </div>
     </div>
   );
