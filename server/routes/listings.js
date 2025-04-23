@@ -69,6 +69,25 @@ module.exports = (db) => {
     });
   });
 
+
+  // PATCH /purchase/:id
+  router.patch('/purchase/:id', (req, res) => {
+    const listingId = req.params.id;
+    const { buyer_id } = req.body;
+
+    const sql = `
+      UPDATE listing l
+      JOIN purchase_order po ON l.listing_id = po.listing_id
+      SET l.status = 'sold', po.buyer_id = ?
+      WHERE l.listing_id = ?;
+    `;
+
+    db.query(sql, [buyer_id, listingId], (err) => {
+      if (err) return res.status(500).json({ error: err.message });
+      res.json({ msg: 'Listing marked as sold' });
+    });
+  });
+
   // PATCH /listings/:id/status — update listing status (e.g. to 'sold')
   router.patch('/:id/status', (req, res) => {
     const { status } = req.body;
@@ -84,6 +103,7 @@ module.exports = (db) => {
       res.json({ msg: 'Listing status updated' });
     });
   });
+
 
   // POST /listings
   router.post('/', (req, res) => {

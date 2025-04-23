@@ -13,6 +13,7 @@ import UserDashboard from "./pages/UserDashboard";
 import VerifyListings from "./pages/VerifyListings";
 import WelcomeScreen from "./pages/WelcomeScreen";
 import NavBar from "./components/NavBar"; // ✅ import the NavBar
+import MyListings from "./pages/MyListings";
 
 function App() {
   const isAuthenticated = localStorage.getItem("token");
@@ -36,6 +37,8 @@ function App() {
         <Route path="/browse" element={<BrowseListings />} />
         <Route path="/book/:id" element={<BookDetail />} />
         <Route path="/add-listing" element={<AddListing />} />
+        <Route path="/my-listings" element={<MyListings />} />
+
 
         {/* Buying & trading */}
         <Route path="/purchase-confirmation" element={<PurchaseConfirmation />} />
