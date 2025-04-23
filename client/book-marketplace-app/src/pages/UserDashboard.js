@@ -11,6 +11,8 @@ function UserDashboard() {
           <li><a href="/wishlist">💖 Wishlist</a></li>
           <li><a href="/reviews">⭐ Reviews</a></li>
           <li><a href="/browse">🔍 Browse More</a></li>
+          <li><a href="/add-listing">📚 Add Listing</a></li>
+
         </ul>
       </div>
     </div>
