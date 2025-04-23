@@ -13,21 +13,21 @@ export default function UserReviews() {
   const [comment, setComment] = useState('');
 
   useEffect(() => {
-    fetch(`http://localhost:5000/reviews/${user_id}`)
+    fetch(`http://localhost:5050/reviews/${user_id}`)
       .then(res => res.json())
       .then(setReceivedReviews)
       .catch(console.error);
 
-    fetch(`http://localhost:5000/reviews/written/${user_id}`)
+    fetch(`http://localhost:5050/reviews/written/${user_id}`)
       .then(res => res.json())
       .then(setWrittenReviews)
       .catch(console.error);
 
-    fetch(`http://localhost:5000/reviews/eligible/${user_id}`)
+    fetch(`http://localhost:5050/reviews/eligible/${user_id}`)
       .then(res => res.json())
       .then(ids => {
         setEligibleUsers(ids);
-        fetch('http://localhost:5000/users')
+        fetch('http://localhost:5050/users')
           .then(res => res.json())
           .then(users => {
             const options = users.filter(u => ids.includes(u.user_id));
@@ -42,7 +42,7 @@ export default function UserReviews() {
     if (!revieweeId) return alert('Please select a user to review.');
 
     try {
-      const res = await fetch('http://localhost:5000/reviews', {
+      const res = await fetch('http://localhost:5050/reviews', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

@@ -2,78 +2,88 @@ import React, { useEffect, useState } from 'react';
 import './MyListings.css';
 
 export default function MyListings() {
-  const [tab, setTab] = useState('listings'); // 'listings' | 'trades' | 'purchases'
+  const [activeTab, setActiveTab] = useState('myListings');
   const [listings, setListings] = useState([]);
-  const [userId] = useState(parseInt(localStorage.getItem('user_id')));
+  const [userId] = useState(() => parseInt(localStorage.getItem('user_id')));
 
   useEffect(() => {
-    fetch('http://localhost:5000/listings')
+    fetch('http://localhost:5050/listings/all')
       .then(res => res.json())
-      .then(data => setListings(data.filter(l => l.poster_id === userId || l.buyer_id === userId)))
+      .then(data => {
+        setListings(data);
+      })
       .catch(console.error);
-  }, [userId]);
+  }, []);
 
-  const renderListings = () => (
-    listings
-      .filter(l => l.poster_id === userId)
-      .map(listing => (
-        <div className="listing-card" key={listing.listing_id}>
-          <h4>{listing.title}</h4>
-          <p><strong>Author:</strong> {listing.author}</p>
-          <p><strong>Type:</strong> {listing.type}</p>
-          <p><strong>Status:</strong> {listing.status}</p>
-        </div>
-      ))
-  );
+  const myListings = listings.filter(l => l.poster_id === userId);
+  const purchaseOrders = listings.filter(l => l.buyer_id === userId);
+  const booksSold = listings.filter(l => l.seller_id === userId);
+  const tradeRequests = listings.filter(l => l.type === 'trade' && l.owner_id === userId);
 
-  const renderTrades = () => (
-    listings
-      .filter(l => l.type === 'trade' && l.poster_id !== userId)
-      .map(listing => (
-        <div className="listing-card" key={listing.listing_id}>
-          <h4>{listing.title}</h4>
-          <p><strong>From:</strong> {listing.poster_name}</p>
-          <p><strong>Condition:</strong> {listing.book_condition}</p>
-          <button onClick={() => alert('Accept with comment flow')}>Accept</button>
-          <button>Decline</button>
-        </div>
-      ))
-  );
+  const renderTab = () => {
+    let displayList = [];
+    let title = '';
 
-  const renderPurchases = () => (
-    listings
-      .filter(l => l.type === 'purchase' && l.buyer_id === userId)
-      .map(listing => (
-        <div className="listing-card" key={listing.listing_id}>
-          <h4>{listing.title}</h4>
-          <p><strong>Price:</strong> ${parseFloat(listing.price).toFixed(2)}</p>
-          <p><strong>Status:</strong> {listing.status}</p>
-        </div>
-      ))
-  );
+    switch (activeTab) {
+      case 'myListings':
+        title = 'My Listings';
+        displayList = myListings;
+        break;
+      case 'tradeRequests':
+        title = 'Trade Requests';
+        displayList = tradeRequests;
+        break;
+      case 'purchaseOrders':
+        title = 'Purchase Orders';
+        displayList = purchaseOrders;
+        break;
+      case 'booksSold':
+        title = 'Books Sold';
+        displayList = booksSold;
+        break;
+      default:
+        break;
+    }
+
+    return (
+      <div className="main-panel">
+        <h2>{`Your ${title}`}</h2>
+        <ul>
+          {displayList.length === 0 ? (
+            <li>No items to show.</li>
+          ) : (
+            displayList.map((item) => (
+              <li key={item.listing_id}>
+                <span>
+                  📘 <strong>{item.title}</strong> by {item.author} – {item.type}
+                </span>
+                <span>Status: {item.status}</span>
+              </li>
+            ))
+          )}
+        </ul>
+      </div>
+    );
+  };
 
   return (
     <div className="mylistings-bg">
       <div className="mylistings-container">
         <div className="sidebar">
-          <button className={tab === 'listings' ? 'active' : ''} onClick={() => setTab('listings')}>📚 My Listings</button>
-          <button className={tab === 'trades' ? 'active' : ''} onClick={() => setTab('trades')}>🔁 Trade Requests</button>
-          <button className={tab === 'purchases' ? 'active' : ''} onClick={() => setTab('purchases')}>💰 Purchase Orders</button>
+          <button className={activeTab === 'myListings' ? 'active' : ''} onClick={() => setActiveTab('myListings')}>
+            📚 My Listings
+          </button>
+          <button className={activeTab === 'tradeRequests' ? 'active' : ''} onClick={() => setActiveTab('tradeRequests')}>
+            🔁 Trade Requests
+          </button>
+          <button className={activeTab === 'purchaseOrders' ? 'active' : ''} onClick={() => setActiveTab('purchaseOrders')}>
+            💳 Purchase Orders
+          </button>
+          <button className={activeTab === 'booksSold' ? 'active' : ''} onClick={() => setActiveTab('booksSold')}>
+            💰 Books Sold
+          </button>
         </div>
-
-        <div className="main-panel">
-          <h2>
-            {tab === 'listings' && 'Your Active Listings'}
-            {tab === 'trades' && 'Incoming Trade Requests'}
-            {tab === 'purchases' && 'Your Purchase Orders'}
-          </h2>
-
-          <div className="listing-grid">
-            {tab === 'listings' && renderListings()}
-            {tab === 'trades' && renderTrades()}
-            {tab === 'purchases' && renderPurchases()}
-          </div>
-        </div>
+        {renderTab()}
       </div>
     </div>
   );

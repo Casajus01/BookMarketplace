@@ -7,7 +7,8 @@ function UserDashboard() {
       <div className="auth-box">
         <h2>My Dashboard</h2>
         <ul className="dashboard-links">
-          <li><a href="/add-listing">📚 My Listings</a></li>
+          <li><a href="/add-listing">📚 Add Listings</a></li>
+          <li><a href="/my-listings">📚 My Listings</a></li>
           <li><a href="/wishlist">💖 Wishlist</a></li>
           <li><a href="/reviews">⭐ Reviews</a></li>
           <li><a href="/browse">🔍 Browse More</a></li>

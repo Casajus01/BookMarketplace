@@ -20,7 +20,7 @@ function AddListing() {
   const poster_id = parseInt(localStorage.getItem('user_id'));
 
   const fetchBooks = () => {
-    fetch('http://localhost:5000/books')
+    fetch('http://localhost:5050/books')
       .then(res => res.json())
       .then(data => {
         const options = data.map(book => ({

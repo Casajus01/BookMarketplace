@@ -12,17 +12,17 @@ export default function BrowseListings() {
   const user_id = parseInt(localStorage.getItem('user_id'));
 
   useEffect(() => {
-    fetch('http://localhost:5000/listings')
+    fetch('http://localhost:5050/listings')
       .then(res => res.json())
       .then(setListings)
       .catch(console.error);
 
-    fetch('http://localhost:5000/books')
+    fetch('http://localhost:5050/books')
       .then(res => res.json())
       .then(setBooks)
       .catch(console.error);
 
-    fetch(`http://localhost:5000/wishlist/${user_id}`)
+    fetch(`http://localhost:5050/wishlist/${user_id}`)
       .then(res => res.json())
       .then(setWishlist)
       .catch(console.error);

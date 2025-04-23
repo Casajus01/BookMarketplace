@@ -1,59 +1,69 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import './VerifyListings.css';
 
-function VerifyListings() {
-  const [pendingListings, setPendingListings] = useState([
-    {
-      id: 1,
-      title: "1984",
-      author: "George Orwell",
-      genre: "Dystopian",
-      condition: "Good",
-    },
-    {
-      id: 2,
-      title: "The Hobbit",
-      author: "J.R.R. Tolkien",
-      genre: "Fantasy",
-      condition: "Like New",
-    },
-  ]);
+export default function VerifyListings() {
+  const [listings, setListings] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  const handleApprove = (id) => {
-    alert(`Listing ${id} approved`);
-    setPendingListings(pendingListings.filter(listing => listing.id !== id));
+  const fetchListings = async () => {
+    try {
+      const res = await fetch('http://localhost:5050/listings/all');
+      const data = await res.json();
+      setListings(data.filter(listing => listing.status === 'pending'));
+    } catch (err) {
+      console.error('Failed to fetch listings:', err);
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const handleReject = (id) => {
-    alert(`Listing ${id} rejected`);
-    setPendingListings(pendingListings.filter(listing => listing.id !== id));
+  useEffect(() => {
+    fetchListings();
+  }, []);
+
+  const handleVerify = async (id) => {
+    try {
+      const res = await fetch(`http://localhost:5050/listings/${id}/verify`, {
+        method: 'PATCH',
+      });
+      if (res.ok) {
+        alert('Listing verified');
+        fetchListings();
+      } else {
+        alert('Failed to verify listing');
+      }
+    } catch (err) {
+      console.error('Error verifying listing:', err);
+    }
   };
 
   return (
-    <div className="auth-bg">
-      <div className="auth-box">
-        <h2>Verify Listings</h2>
-        {pendingListings.length === 0 ? (
+    <div className="verify-bg">
+      <div className="verify-container">
+        <h2>Pending Listings for Verification</h2>
+        {loading ? (
+          <p>Loading...</p>
+        ) : listings.length === 0 ? (
           <p>No pending listings.</p>
         ) : (
-          <ul className="verify-list">
-            {pendingListings.map((listing) => (
-              <li key={listing.id}>
-                <h3>{listing.title}</h3>
+          <div className="verify-grid">
+            {listings.map(listing => (
+              <div key={listing.listing_id} className="verify-card">
+                <h3>{listing.title || 'Untitled Book'}</h3>
                 <p><strong>Author:</strong> {listing.author}</p>
-                <p><strong>Genre:</strong> {listing.genre}</p>
-                <p><strong>Condition:</strong> {listing.condition}</p>
-                <div className="btn-row">
-                  <button className="approve-btn" onClick={() => handleApprove(listing.id)}>Approve</button>
-                  <button className="reject-btn" onClick={() => handleReject(listing.id)}>Reject</button>
-                </div>
-              </li>
+                <p><strong>Type:</strong> {listing.type}</p>
+                <p><strong>Status:</strong> {listing.status}</p>
+                {listing.type === 'purchase' && (
+                  <p><strong>Price:</strong> ${parseFloat(listing.price).toFixed(2)}</p>
+                )}
+                <button onClick={() => handleVerify(listing.listing_id)}>
+                  ✅ Verify Listing
+                </button>
+              </div>
             ))}
-          </ul>
+          </div>
         )}
       </div>
     </div>
   );
 }
-
-export default VerifyListings;

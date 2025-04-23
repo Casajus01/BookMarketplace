@@ -12,13 +12,11 @@ export default function Login() {
 
   const handleLogin = async (e) => {
     e.preventDefault();
-    if (!email || !password) {
-      return alert('Please enter email and password');
-    }
+    if (!email || !password) return alert('Please enter email and password');
 
     setLoading(true);
     try {
-      const res = await fetch('http://localhost:5000/auth/login', {
+      const res = await fetch('http://localhost:5050/auth/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password }),
@@ -26,17 +24,20 @@ export default function Login() {
 
       const data = await res.json();
       if (res.ok) {
-        alert('Logged in successfully!');
         localStorage.setItem('token', data.token);
-
-        // ✅ Decode name from token
-        const decoded = jwtDecode(data.token);
-        const name = decoded.name;
-
-        // ✅ Navigate with name
-        navigate('/welcome', { state: { name } });
-
         localStorage.setItem('user_id', data.user_id);
+
+        const decoded = jwtDecode(data.token);
+        const { name, role } = decoded;
+
+        localStorage.setItem('role', role);
+
+        // 🎯 Conditional redirect:
+        if (role === 'admin') {
+          navigate('/verify-listings');
+        } else {
+          navigate('/welcome', { state: { name } });
+        }
       } else {
         alert(data.msg || 'Login failed');
       }
