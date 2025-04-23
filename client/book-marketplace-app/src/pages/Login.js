@@ -1,34 +1,48 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { jwtDecode } from 'jwt-decode';
 import './Login.css';
 
 export default function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   const handleLogin = async (e) => {
     e.preventDefault();
+    if (!email || !password) {
+      return alert('Please enter email and password');
+    }
 
+    setLoading(true);
     try {
-      const res = await fetch('http://localhost:5000/auth/login', {
+      const res = await fetch('http://localhost:5050/auth/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password })
+        body: JSON.stringify({ email, password }),
       });
 
       const data = await res.json();
       if (res.ok) {
         alert('Logged in successfully!');
-        navigate('/browse');
-        console.log('Token:', data.token);
         localStorage.setItem('token', data.token);
+
+        // ✅ Decode name from token
+        const decoded = jwtDecode(data.token);
+        const name = decoded.name;
+
+        // ✅ Navigate with name
+        navigate('/welcome', { state: { name } });
       } else {
         alert(data.msg || 'Login failed');
       }
     } catch (err) {
       alert('Error connecting to server');
       console.error(err);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -44,16 +58,23 @@ export default function Login() {
             onChange={(e) => setEmail(e.target.value)}
           />
           <input
-            type="password"
+            type={showPassword ? 'text' : 'password'}
             placeholder="Password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
           <div className="checkbox-row">
-            <input type="checkbox" id="show-password" />
+            <input
+              type="checkbox"
+              id="show-password"
+              checked={showPassword}
+              onChange={() => setShowPassword(prev => !prev)}
+            />
             <label htmlFor="show-password">Display Password</label>
           </div>
-          <button type="submit">Log In</button>
+          <button type="submit" disabled={loading}>
+            {loading ? 'Logging in...' : 'Log In'}
+          </button>
         </form>
         <div className="extra-links">
           <a href="#">Forgot Your Password?</a>
