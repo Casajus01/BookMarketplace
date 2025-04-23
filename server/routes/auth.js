@@ -44,7 +44,7 @@ module.exports = (db) => {
         JWT_SECRET,
         { expiresIn: '2h' }
       );
-      res.json({ token });
+      res.json({ token, user_id: user.user_id });
     });
   });
 

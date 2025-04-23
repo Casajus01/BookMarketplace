@@ -23,6 +23,7 @@ export default function Login() {
         navigate('/browse');
         console.log('Token:', data.token);
         localStorage.setItem('token', data.token);
+        localStorage.setItem('user_id', data.user_id);
       } else {
         alert(data.msg || 'Login failed');
       }

@@ -13,18 +13,31 @@ module.exports = (db) => {
 
   //Add a new book
   router.post('/', (req, res) => {
-    const { title, author, isbn } = req.body;
+    const { title, author } = req.body;
+  
     if (!title || !author) {
       return res.status(400).json({ msg: 'Title and author are required' });
     }
-
-    const sql = 'INSERT INTO book (title, author,isbn) VALUES (?, ?, ?)';
-    db.query(sql, [title, author, isbn], (err, result) => {
+  
+    // Check for duplicate title
+    const checkSql = 'SELECT * FROM book WHERE title = ?';
+    db.query(checkSql, [title], (err, rows) => {
       if (err) return res.status(500).json({ error: err.message });
-      res.status(201).json({ book_id: result.insertId });
+  
+      if (rows.length > 0) {
+        return res.status(409).json({ msg: 'A book with this title already exists' });
+      }
+  
+      // No duplicate, insert the book
+      const insertSql = 'INSERT INTO book (title, author) VALUES (?, ?)';
+      db.query(insertSql, [title, author], (err, result) => {
+        if (err) return res.status(500).json({ error: err.message });
+        res.status(201).json({ book_id: result.insertId });
+      });
     });
   });
 
+  
   router.patch('/:id', (req, res) => {
     const { isbn } = req.body;
     const { id } = req.params;
