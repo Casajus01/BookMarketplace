@@ -28,6 +28,9 @@ const listingRoutes = require('./routes/listings')(db);
 app.use('/listings', listingRoutes);
 const bookRoutes = require('./routes/books')(db);
 app.use('/books', bookRoutes);
+const wishlistRoutes = require('./routes/wishlist')(db);
+app.use('/wishlist', wishlistRoutes);
+
 
 
 
