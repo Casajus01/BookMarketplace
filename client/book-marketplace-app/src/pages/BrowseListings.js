@@ -51,6 +51,19 @@ export default function BrowseListings() {
     });
   };
 
+  const handleTradeClick = (listing) => {
+    const book = getBook(listing.book_id);
+    navigate('/trade-proposal', {
+      state: {
+        listing_id: listing.listing_id,
+        book_id: listing.book_id,
+        title: book.title,
+        author: book.author,
+        poster_id: listing.poster_id
+      }
+    });
+  };
+
   return (
     <div className="browse-page">
       <div className="browse-header">
@@ -86,11 +99,9 @@ export default function BrowseListings() {
                   </p>
                 )}
               </div>
-              <button onClick={() => {
-                isTrade
-                  ? navigate(`/book/${listing.listing_id}`)
-                  : handlePurchaseClick(listing);
-              }}>
+              <button onClick={() =>
+                isTrade ? handleTradeClick(listing) : handlePurchaseClick(listing)
+              }>
                 {label}
               </button>
             </div>

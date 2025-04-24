@@ -13,36 +13,45 @@ export default function MyListings() {
     fetch('http://localhost:5050/listings/all')
       .then(res => res.json())
       .then(data => {
-        setMyListings(data.filter(item => item.poster_id === userId));
+        setMyListings(Array.isArray(data) ? data.filter(item => item.poster_id === userId) : []);
         setTradeRequests(
-          data.filter(item => item.type === 'trade' && item.poster_id !== userId && item.owner_id === userId)
+          Array.isArray(data)
+            ? data.filter(item => item.type === 'trade' && item.poster_id !== userId && item.owner_id === userId)
+            : []
         );
+      })
+      .catch(() => {
+        setMyListings([]);
+        setTradeRequests([]);
       });
 
     fetch(`http://localhost:5050/listings/purchase-orders/${userId}`)
       .then(res => res.json())
-      .then(setPurchaseOrders)
-      .catch(console.error);
+      .then(data => setPurchaseOrders(Array.isArray(data) ? data : []))
+      .catch(() => setPurchaseOrders([]));
 
     fetch(`http://localhost:5050/listings/books-sold/${userId}`)
       .then(res => res.json())
-      .then(setBooksSold)
-      .catch(console.error);
+      .then(data => setBooksSold(Array.isArray(data) ? data : []))
+      .catch(() => setBooksSold([]));
   }, [userId]);
 
-  const renderList = (items, labelFn) => (
-    <ul>
-      {items.length === 0 ? (
-        <li>No items to show.</li>
-      ) : (
-        items.map(item => (
-          <li key={item.listing_id}>
-            {labelFn(item)}
-          </li>
-        ))
-      )}
-    </ul>
-  );
+  const renderList = (items, labelFn) => {
+    const safeItems = Array.isArray(items) ? items : [];
+    return (
+      <ul>
+        {safeItems.length === 0 ? (
+          <li>No items to show.</li>
+        ) : (
+          safeItems.map(item => (
+            <li key={item.listing_id || item.book_id}>
+              {labelFn(item)}
+            </li>
+          ))
+        )}
+      </ul>
+    );
+  };
 
   const renderTab = () => {
     switch (activeTab) {
@@ -52,7 +61,8 @@ export default function MyListings() {
             <h2>My Listings</h2>
             {renderList(myListings, (item) => (
               <>
-                📘 <strong>{item.title}</strong> by {item.author} — {item.type} <span>Status: {item.status}</span>
+                📘 <strong>{item.title}</strong> by {item.author} — {item.type}{' '}
+                <span>Status: {item.status}</span>
               </>
             ))}
           </div>
